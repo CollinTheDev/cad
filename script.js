@@ -1,7 +1,13 @@
 // Simulated user data stored in a JSON file (replace with backend database)
-const users = [
-    { username: 'admin', password: 'password' }
-];
+let users = [];
+
+// Function to fetch users from JSON file (replace with backend integration)
+fetch('users.json')
+    .then(response => response.json())
+    .then(data => {
+        users = data;
+    })
+    .catch(error => console.error('Error fetching users:', error));
 
 // Function to handle login form submission
 document.getElementById('login-form').addEventListener('submit', function(event) {
@@ -54,9 +60,21 @@ document.getElementById('signup-form').addEventListener('submit', function(event
     } else {
         // Add new user to the array (simulate signup)
         users.push({ username: newUsername, password: newPassword });
-        alert('Sign up successful! You can now login with your new account.');
-        // Automatically login the new user after signup
-        showDashboard(newUsername);
+
+        // Update users.json file (replace with backend integration)
+        fetch('users.json', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(users)
+        })
+        .then(() => {
+            alert('Sign up successful! You can now login with your new account.');
+            // Automatically login the new user after signup
+            showDashboard(newUsername);
+        })
+        .catch(error => console.error('Error updating users:', error));
     }
 
     // Reset signup form fields
